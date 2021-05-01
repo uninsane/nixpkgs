@@ -31063,6 +31063,8 @@ with pkgs;
     wmClass = "firefox-devedition";
   };
 
+  firefox-pmos-mobile = callPackage ../applications/networking/browsers/firefox-pmos-mobile { };
+
   librewolf-unwrapped = callPackage ../applications/networking/browsers/librewolf { };
 
   librewolf = wrapFirefox librewolf-unwrapped {
