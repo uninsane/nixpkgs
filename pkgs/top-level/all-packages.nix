@@ -20192,8 +20192,6 @@ with pkgs;
 
   qbs = libsForQt5.callPackage ../development/tools/build-managers/qbs { };
 
-  qca2 = callPackage ../development/libraries/qca2 { qt = qt4; };
-
   qimageblitz = callPackage ../development/libraries/qimageblitz {};
 
   qolibri = libsForQt5.callPackage ../applications/misc/qolibri { };
