@@ -265,8 +265,9 @@ with prev;
 
   luaossl = prev.lib.overrideLuarocks prev.luaossl (drv: {
     externalDeps = [
-      { name = "CRYPTO"; dep = pkgs.openssl; }
-      { name = "OPENSSL"; dep = pkgs.openssl; }
+      # https://github.com/wahern/luaossl/pull/199
+      { name = "CRYPTO"; dep = pkgs.openssl_1_1; }
+      { name = "OPENSSL"; dep = pkgs.openssl_1_1; }
     ];
   });
 
