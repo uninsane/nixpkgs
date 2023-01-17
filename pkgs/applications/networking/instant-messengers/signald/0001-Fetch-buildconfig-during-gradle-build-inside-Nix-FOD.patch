@@ -21,13 +21,14 @@ index 799e782..caceaac 100644
      mavenCentral()
  }
  
-@@ -104,6 +107,8 @@ dependencies {
+@@ -104,6 +107,9 @@ dependencies {
      implementation 'io.prometheus:simpleclient_httpserver:0.16.0'
-     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
-     implementation 'io.sentry:sentry:6.4.0'
+     implementation 'com.squareup.okhttp3:logging-interceptor:4.10.0'
+     implementation 'io.sentry:sentry:6.9.2'
 +    implementation 'com.github.gmazzo.buildconfig:com.github.gmazzo.buildconfig.gradle.plugin:3.1.0'
++    implementation 'com.squareup.okio:okio-jvm:3.0.0'
 +    implementation 'org.jetbrains.kotlin:kotlin-scripting-jvm:1.7.10'
-     testImplementation 'org.junit.jupiter:junit-jupiter:5.8.2'
+     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
  }
  
 @@ -171,4 +176,4 @@ allprojects {
