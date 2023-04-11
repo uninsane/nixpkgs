@@ -88,7 +88,6 @@ stdenv.mkDerivation (finalAttrs: {
     runHook postCheck
   '';
 
-
   meta = {
     homepage = "https://github.com/theZiz/sparrow3d";
     description = "A software renderer for different open handhelds like the gp2x, wiz, caanoo and pandora";
