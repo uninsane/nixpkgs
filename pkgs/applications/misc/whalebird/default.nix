@@ -84,7 +84,7 @@ stdenv.mkDerivation rec {
     homepage = "https://whalebird.social";
     sourceProvenance = with sourceTypes; [ binaryNativeCode ];
     license = licenses.mit;
-    maintainers = with maintainers; [ wolfangaukang colinsane ];
+    maintainers = with maintainers; [ wolfangaukang ];
     platforms = [ "x86_64-linux" "aarch64-linux" ];
   };
 }
