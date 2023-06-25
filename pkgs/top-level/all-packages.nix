@@ -31072,6 +31072,11 @@ with pkgs;
     libName = "librewolf";
   };
 
+  librewolf-pmos-mobile = firefox-pmos-mobile.override {
+    firefox-unwrapped = librewolf-unwrapped;
+    libName = "librewolf";
+  };
+
   firefox_decrypt = python3Packages.callPackage ../tools/security/firefox_decrypt { };
 
   fmtoy = callPackage ../tools/audio/fmtoy { };
