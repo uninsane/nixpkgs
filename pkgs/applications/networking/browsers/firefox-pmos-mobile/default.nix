@@ -4,7 +4,6 @@
 , stdenv
 , wrapFirefox
 , libName ? "firefox"
-, keepHomepage ? true
 }:
 let
   pin = import ./pin.nix;
@@ -21,19 +20,19 @@ let
       inherit (pin) sha256;
     };
 
-    makeFlags = [ "DISTRO=NixOS" ];
+    patches = [
+      ./fix-hardcoded-paths.patch
+    ];
 
-    installPhase = ''
-      mkdir $out
-      cp out/home.html $out/
-      cp out/userChrome.css $out/
-      cp src/mobile-config-autoconfig.js $out/
-      cp src/mobile-config-prefs.js $out/
-    '';
+    makeFlags = [
+      "DESTDIR=${placeholder "out"}"
+      "FIREFOX_DIR=/lib/${libName}"
+    ];
 
-    fixupPhase = ''
-      substituteInPlace $out/mobile-config-autoconfig.js \
-        --replace "/etc/mobile-config-firefox/userChrome.css" "$out/userChrome.css"
+    postInstall = ''
+      mv "$out/usr/share" "$out/share"
+      rmdir "$out/usr"
+      substituteAllInPlace "$out/lib/${libName}/mobile-config-autoconfig.js"
     '';
 
     meta = with lib; {
@@ -44,25 +43,21 @@ let
     };
   };
 
-  extraPolicies = let
-    policies = lib.recursiveUpdate pin.policies {
-      Homepage.URL = "${mobile-config-firefox}/home.html";
-    };
-  in
-    if keepHomepage then builtins.removeAttrs policies [ "Homepage" ] else policies;
-
   wrapped = wrapFirefox firefox-unwrapped {
     version = "${lib.getVersion firefox-unwrapped}-pmos-${version}";
-    inherit libName extraPolicies;
+    inherit libName;
+    extraPolicies = pin.policies;
   };
 in wrapped.overrideAttrs (old: {
   buildCommand = old.buildCommand + ''
     # Inject default configs with AutoConfig commented out
     # They are problematic as the AutoConfig file is specified by wrapFirefox
-    sed '/general\.config\.\(filename\|obscure_value\)/ s|^|//|g' < "${mobile-config-firefox}/mobile-config-prefs.js" > "$out/lib/${libName}/defaults/pref/mobile-config-prefs.js"
+    sed '/general\.config\.\(filename\|obscure_value\)/ s|^|//|g' \
+      < "${mobile-config-firefox}/lib/${libName}/defaults/pref/mobile-config-prefs.js" \
+      > "$out/lib/${libName}/defaults/pref/mobile-config-prefs.js"
 
     # Inject forced configs
-    cat "${mobile-config-firefox}/mobile-config-autoconfig.js" >> "$out/lib/${libName}/mozilla.cfg"
+    cat "${mobile-config-firefox}/lib/${libName}/mobile-config-autoconfig.js" >> "$out/lib/${libName}/mozilla.cfg"
   '';
 
   passthru = (old.passthru or {}) // {

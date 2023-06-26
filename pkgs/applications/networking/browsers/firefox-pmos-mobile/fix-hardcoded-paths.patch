@@ -1,0 +1,31 @@
+diff --git a/src/mobile-config-autoconfig.js b/src/mobile-config-autoconfig.js
+index 5d9691d..11febe8 100644
+--- a/src/mobile-config-autoconfig.js
++++ b/src/mobile-config-autoconfig.js
+@@ -143,7 +143,7 @@ function css_file_get_fragments(name) {
+         return g_fragments_cache[name];
+ 
+     var ret = [];
+-    var path = "/etc/mobile-config-firefox/" + name + ".files";
++    var path = "@out@/etc/mobile-config-firefox/" + name + ".files";
+     log("Reading fragments from file: " + path);
+     var file = new FileUtils.File(path);
+ 
+@@ -157,7 +157,7 @@ function css_file_get_fragments(name) {
+         var line = {};
+         has_more = istream.readLine(line);
+         if (css_fragment_check_firefox_version(line.value))
+-            ret.push("/etc/mobile-config-firefox/" + line.value);
++            ret.push("@out@/etc/mobile-config-firefox/" + line.value);
+ 
+     } while (has_more);
+ 
+@@ -183,7 +183,7 @@ function css_file_get(name) {
+ // file: return of css_file_get()
+ function css_file_delete_outdated(name, file) {
+     var depends = css_file_get_fragments(name).slice(); /* copy the array */
+-    depends.push("/etc/mobile-config-firefox/" + name + ".files");
++    depends.push("@out@/etc/mobile-config-firefox/" + name + ".files");
+     for (var i in depends) {
+         var depend = depends[i];
+         var file_depend = new FileUtils.File(depend);
