@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -I nixpkgs=../../../../../ -i bash -p curl
+#!nix-shell -I nixpkgs=../../../../../ -i bash -p curl -p nixfmt
 
 set -euo pipefail
 
@@ -15,3 +15,4 @@ curl "$SRC_REPO/src/policies.json" > policies.json
 echo "# Run generate.sh to update this file" > policies.nix
 nix-instantiate --eval -E "with builtins; fromJSON (readFile ./policies.json) // { version = \"$1\"; }" >> policies.nix
 rm policies.json
+nixfmt policies.nix
