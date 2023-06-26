@@ -1,0 +1,15 @@
+diff --git a/src/mobile-config-prefs.js b/src/mobile-config-prefs.js
+index b99398d..3486238 100644
+--- a/src/mobile-config-prefs.js
++++ b/src/mobile-config-prefs.js
+@@ -1,9 +1,7 @@
+ // Copyright 2022 Oliver Smith, Martijn Braam
+ // SPDX-License-Identifier: MPL-2.0
+ 
+-// Set up autoconfig (we use it to copy/update userChrome.css into profile dir)
+-pref('general.config.filename', "mobile-config-autoconfig.js");
+-pref('general.config.obscure_value', 0);
++// Don't autoconfig via `pref`: leave that to `wrapFirefox`
+ pref('general.config.sandbox_enabled', false);
+ 
+ // Enable android-style pinch-to-zoom
