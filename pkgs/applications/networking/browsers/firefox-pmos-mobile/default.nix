@@ -7,7 +7,8 @@
 , keepHomepage ? true
 }:
 let
-  version = "2.2.0";
+  pin = import ./pin.nix;
+  version = pin.version;
 
   mobile-config-firefox = stdenv.mkDerivation {
     pname = "mobile-config-firefox";
@@ -17,7 +18,7 @@ let
       owner = "postmarketOS";
       repo = "mobile-config-firefox";
       rev = version;
-      sha256 = "1kpdx7qs74g4s22ijb4mbx6rr8j2s0lwlknc53gpvpdirv2j9f02";
+      inherit (pin) sha256;
     };
 
     makeFlags = [ "DISTRO=NixOS" ];
@@ -44,11 +45,10 @@ let
   };
 
   extraPolicies = let
-    source = import ./policies.nix;
-    policies = lib.recursiveUpdate source.policies {
+    policies = lib.recursiveUpdate pin.policies {
       Homepage.URL = "${mobile-config-firefox}/home.html";
     };
-  in assert (lib.assertMsg (source.version == version) "policies.nix is out of date. Run generate.sh to update it.");
+  in
     if keepHomepage then builtins.removeAttrs policies [ "Homepage" ] else policies;
 
   wrapped = wrapFirefox firefox-unwrapped {
@@ -64,4 +64,8 @@ in wrapped.overrideAttrs (old: {
     # Inject forced configs
     cat "${mobile-config-firefox}/mobile-config-autoconfig.js" >> "$out/lib/${libName}/mozilla.cfg"
   '';
+
+  passthru = (old.passthru or {}) // {
+    updateScript = ./update.sh;
+  };
 })

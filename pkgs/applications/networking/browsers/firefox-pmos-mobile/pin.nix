@@ -1,4 +1,3 @@
-# Run generate.sh to update this file
 {
   policies = {
     DisableFirefoxScreenshots = true;
@@ -23,4 +22,5 @@
     };
   };
   version = "2.2.0";
+  sha256 = "1kpdx7qs74g4s22ijb4mbx6rr8j2s0lwlknc53gpvpdirv2j9f02";
 }
