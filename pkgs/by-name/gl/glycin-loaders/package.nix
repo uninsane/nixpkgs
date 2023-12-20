@@ -3,12 +3,14 @@
 , fetchurl
 , substituteAll
 , bubblewrap
+, buildPackages
 , cargo
 , git
 , meson
 , ninja
 , pkg-config
 , rustc
+, rustPlatform
 , gtk4
 , cairo
 , libheif
@@ -34,12 +36,14 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   nativeBuildInputs = [
+    buildPackages.gettext
     cargo
     git
     meson
     ninja
     pkg-config
     rustc
+    rustPlatform.cargoSetupHook
   ];
 
   buildInputs = [
@@ -48,6 +52,18 @@ stdenv.mkDerivation (finalAttrs: {
     libheif
     libxml2 # for librsvg crate
   ];
+
+  cargoVendorDir = "vendor";
+
+  # glycin install script expects to find artifacts in cargo_target/loaders/release/
+  # but rustc unconditionally outputs them to cargo_target/loaders/<target-triple>/release/ when cross compiling
+  preBuild = lib.optionalString (stdenv.hostPlatform.config != stdenv.buildPlatform.config) ''
+    mkdir -p cargo_target/loaders/release
+    ln -s ../${stdenv.hostPlatform.rust.rustcTarget}/release/glycin-heif cargo_target/loaders/release/glycin-heif
+    ln -s ../${stdenv.hostPlatform.rust.rustcTarget}/release/glycin-image-rs cargo_target/loaders/release/glycin-image-rs
+    ln -s ../${stdenv.hostPlatform.rust.rustcTarget}/release/glycin-jxl cargo_target/loaders/release/glycin-jxl
+    ln -s ../${stdenv.hostPlatform.rust.rustcTarget}/release/glycin-svg cargo_target/loaders/release/glycin-svg
+  '';
 
   passthru = {
     updateScript = gnome.updateScript {
