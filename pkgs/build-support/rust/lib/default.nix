@@ -59,7 +59,7 @@ rec {
       "CC_${stdenv.buildPlatform.rust.cargoEnvVarTarget}=${ccForBuild}" \
       "CXX_${stdenv.buildPlatform.rust.cargoEnvVarTarget}=${cxxForBuild}" \
       "CARGO_TARGET_${stdenv.buildPlatform.rust.cargoEnvVarTarget}_LINKER=${ccForBuild}" \
-      "CARGO_BUILD_TARGET=${rustBuildPlatform}" \
+      "CARGO_BUILD_TARGET=${rustTargetPlatform}" \
       "HOST_CC=${buildPackages.stdenv.cc}/bin/cc" \
       "HOST_CXX=${buildPackages.stdenv.cc}/bin/c++" \
     '';

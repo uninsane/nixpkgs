@@ -13,7 +13,7 @@
 # This confusingly-named parameter indicates the *subdirectory of
 # `target/` from which to copy the build artifacts.  It is derived
 # from a stdenv platform (or a JSON file).
-, target ? stdenv.hostPlatform.rust.cargoShortTarget
+, target ? stdenv.targetPlatform.rust.cargoShortTarget
 }:
 
 {
@@ -22,7 +22,7 @@
       name = "cargo-build-hook.sh";
       propagatedBuildInputs = [ cargo ];
       substitutions = {
-        inherit (rust.envVars) rustHostPlatformSpec setEnv;
+        inherit (rust.envVars) rustTargetPlatformSpec setEnv;
       };
     } ./cargo-build-hook.sh) {};
 
@@ -31,7 +31,7 @@
       name = "cargo-check-hook.sh";
       propagatedBuildInputs = [ cargo ];
       substitutions = {
-        inherit (rust.envVars) rustHostPlatformSpec;
+        inherit (rust.envVars) rustTargetPlatformSpec;
       };
     } ./cargo-check-hook.sh) {};
 
@@ -49,7 +49,7 @@
       name = "cargo-nextest-hook.sh";
       propagatedBuildInputs = [ cargo cargo-nextest ];
       substitutions = {
-        inherit (rust.envVars) rustHostPlatformSpec;
+        inherit (rust.envVars) rustTargetPlatformSpec;
       };
     } ./cargo-nextest-hook.sh) {};
 
@@ -65,11 +65,13 @@
         diff = "${lib.getBin buildPackages.diffutils}/bin/diff";
 
         cargoConfig = ''
-          [target."${stdenv.buildPlatform.rust.rustcTarget}"]
+          [target."${stdenv.hostPlatform.rust.rustcTarget}"]
           "linker" = "${rust.envVars.ccForBuild}"
-          ${lib.optionalString (stdenv.buildPlatform.config != stdenv.hostPlatform.config) ''
-            [target."${stdenv.hostPlatform.rust.rustcTarget}"]
-            "linker" = "${rust.envVars.ccForHost}"
+          ${lib.optionalString (stdenv.hostPlatform.config != stdenv.targetPlatform.config) ''
+            [build]
+            "target" = "${stdenv.targetPlatform.rust.rustcTarget}"
+            [target."${stdenv.targetPlatform.rust.rustcTarget}"]
+            "linker" = "${rust.envVars.ccForTarget}"
           ''}
           "rustflags" = [ "-C", "target-feature=${if stdenv.hostPlatform.isStatic then "+" else "-"}crt-static" ]
         '';
