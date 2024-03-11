@@ -19,11 +19,10 @@ stdenv.mkDerivation (finalAttrs: {
 
   nativeBuildInputs = [
     scdoc
-    hare
+    hare.hook
   ];
 
   makeFlags = [
-    "HARECACHE=.harecache"
     "PREFIX=${builtins.placeholder "out"}"
   ];
 
@@ -31,7 +30,10 @@ stdenv.mkDerivation (finalAttrs: {
 
   doCheck = true;
 
-  dontConfigure = true;
+  postPatch = ''
+    substituteInPlace ./Makefile \
+      --replace-fail '$(HARE) test' '$(HARE) test $(HAREFLAGS)'
+  '';
 
   passthru.updateScript = nix-update-script { };
 
