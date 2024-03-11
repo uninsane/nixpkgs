@@ -146,9 +146,8 @@ stdenv.mkDerivation (finalAttrs: {
       --prefix PATH : ${lib.makeBinPath [binutils-unwrapped harec qbe]}
   '';
 
-  setupHook = ./setup-hook.sh;
-
   passthru = {
+    hook = callPackage ./hook.nix { hare = finalAttrs.finalPackage; };
     updateScript = gitUpdater { };
     tests = lib.optionalAttrs enableCrossCompilation {
       crossCompilation = callPackage ./cross-compilation-tests.nix {
