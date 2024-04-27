@@ -27199,7 +27199,7 @@ with pkgs;
 
   fatrace = callPackage ../os-specific/linux/fatrace { };
 
-  ffado = libsForQt5.callPackage ../os-specific/linux/ffado {
+  ffado = callPackage ../os-specific/linux/ffado {
     inherit (linuxPackages) kernel;
   };
   libffado = ffado;
