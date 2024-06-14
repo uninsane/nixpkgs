@@ -13,6 +13,9 @@
 , pulseaudio
 , libcanberra-gtk3
 , switchboard
+, buildPackages
+, gettext
+, glib
 }:
 
 stdenv.mkDerivation rec {
@@ -27,6 +30,8 @@ stdenv.mkDerivation rec {
   };
 
   nativeBuildInputs = [
+    gettext  # for msgfmt
+    glib
     meson
     ninja
     pkg-config
@@ -42,6 +47,11 @@ stdenv.mkDerivation rec {
     pulseaudio
     switchboard
   ];
+
+  # required for cross compilation
+  env.PKG_CONFIG_GIO_2_0_GLIB_COMPILE_RESOURCES = "${lib.getDev buildPackages.glib}/bin/glib-compile-resources";
+
+  strictDeps = true;
 
   passthru = {
     updateScript = nix-update-script { };
