@@ -17,7 +17,7 @@
 , geocode-glib_2
 , vala
 , gnome
-, withIntrospection ? true
+, withIntrospection ? lib.meta.availableOn stdenv.hostPlatform gobject-introspection && stdenv.hostPlatform.emulatorAvailable buildPackages
 }:
 
 stdenv.mkDerivation rec {
