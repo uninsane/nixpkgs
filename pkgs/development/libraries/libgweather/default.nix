@@ -2,6 +2,7 @@
 , stdenv
 , buildPackages
 , fetchurl
+, makeWrapper
 , meson
 , ninja
 , pkg-config
@@ -39,6 +40,7 @@ stdenv.mkDerivation rec {
   ];
 
   depsBuildBuild = [
+    makeWrapper
     pkg-config
   ];
 
@@ -70,11 +72,10 @@ stdenv.mkDerivation rec {
     "-Dc_args=-D_DARWIN_C_SOURCE"
   ];
 
-  # ensure build-time scripts like gen_locations_variant.py use the build gobject types.
-  env.GI_TYPELIB_PATH = "${lib.getLib buildPackages.glib}/lib/girepository-1.0";
-
   postPatch = ''
-    patchShebangs build-aux/meson/gen_locations_variant.py
+    patchShebangs --build build-aux/meson/gen_locations_variant.py
+    wrapProgram $PWD/build-aux/meson/gen_locations_variant.py \
+      --prefix GI_TYPELIB_PATH : ${lib.getLib buildPackages.glib}/lib/girepository-1.0 \
 
     # Run-time dependency gi-docgen found: NO (tried pkgconfig and cmake)
     # it should be a build-time dep for build
@@ -97,6 +98,8 @@ stdenv.mkDerivation rec {
     # Cannot be in postInstall, otherwise _multioutDocs hook in preFixup will move right back.
     moveToOutput "share/doc" "$devdoc"
   '';
+
+  strictDeps = true;
 
   passthru = {
     updateScript = gnome.updateScript {
