@@ -29,6 +29,7 @@ stdenv.mkDerivation rec {
   ];
 
   cmakeFlags = [
+    "-DCMAKE_POLICY_VERSION_MINIMUM=3.5"
     "-DLIBSUPERDERPY_STATIC=ON" # recommended by upstream for coexistence with other superderpy games
   ];
 
