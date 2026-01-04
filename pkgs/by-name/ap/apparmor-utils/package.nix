@@ -23,7 +23,7 @@ python3Packages.buildPythonApplication {
   inherit (libapparmor) version src;
 
   postPatch = ''
-    patchShebangs .
+    patchShebangs common
     cd utils
 
     substituteInPlace aa-remove-unknown \
