@@ -34,6 +34,9 @@ stdenv.mkDerivation (finalAttrs: {
   setOutputFlags = false; # some aren't supported
   separateDebugInfo = false;
 
+  ${if enableStatic then "__structuredAttrs" else null} = true;
+  ${if enableStatic then "outputChecks" else null} = { out.allowedReferences = []; };
+
   patches = [
     # linux-gnuabielfv{1,2} is not in ncurses' list of GNU-ish targets (or smth like that?).
     # Causes some defines (_XOPEN_SOURCE=600, _DEFAULT_SOURCE) to not get set, so wcwidth is not exposed by system headers, which causes a FTBFS.
