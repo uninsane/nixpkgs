@@ -79,6 +79,7 @@ stdenv.mkDerivation (finalAttrs: {
     # For static binaries, the point is to have a standalone binary with
     # minimum dependencies. So here we make sure that binaries using this
     # package won't depend on a terminfo database located in the Nix store.
+    "--without-default-terminfo-dir"
     "--with-terminfo-dirs=${
       lib.concatStringsSep ":" [
         "/etc/terminfo" # Debian, Fedora, Gentoo
