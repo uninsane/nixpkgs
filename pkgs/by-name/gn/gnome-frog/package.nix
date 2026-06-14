@@ -63,7 +63,7 @@ python3Packages.buildPythonApplication (finalAttrs: {
     libnotify
     libadwaita
     libportal
-    zbar
+    (zbar.override { enableVideo = false; })
     tesseract5
     gst_all_1.gstreamer
   ];
